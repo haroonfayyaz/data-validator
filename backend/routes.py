@@ -2,7 +2,7 @@ from fastapi import UploadFile, File, HTTPException
 from typing import Dict, Any, List
 import pandas as pd
 import io
-from backend.validators import validate_volume, validate_email_completeness, validate_age
+from backend.validators import validate_required_columns, validate_volume, validate_email_completeness, validate_age
 
 
 async def validate_csv(file: UploadFile) -> Dict[str, Any]:
@@ -33,6 +33,15 @@ async def validate_csv(file: UploadFile) -> Dict[str, Any]:
         df = pd.read_csv(io.BytesIO(contents))
 
         errors: List[Dict[str, Any]] = []
+
+        # Check required columns first
+        # If any required column is missing, return single error and skip all other checks
+        columns_error = validate_required_columns(df)
+        if columns_error:
+            return {
+                "status": "fail",
+                "errors": [columns_error]
+            }
 
         # Check A: Volume Check (Global)
         # If this fails, return single error and skip all other checks
