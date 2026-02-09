@@ -1,6 +1,7 @@
-from fastapi import FastAPI, UploadFile, File, HTTPException
+from fastapi import FastAPI, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
-from typing import Dict, Any
+import uvicorn
+from backend.routes import validate_csv as validate_csv_route
 
 app = FastAPI(title="Data Validator API", version="1.0.0")
 
@@ -21,3 +22,12 @@ async def root():
 @app.get("/health")
 async def health():
     return {"status": "healthy"}
+
+
+@app.post("/validate")
+async def validate_csv_endpoint(file: UploadFile = File(...)):
+    return await validate_csv_route(file)
+
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000, reload=True)
