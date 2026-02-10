@@ -1,0 +1,28 @@
+.success-banner {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem;
+  background-color: #f0fff4;
+  border: 1px solid #48bb78;
+  border-radius: 8px;
+  margin-top: 2rem;
+}
+
+.success-banner svg {
+  color: #48bb78;
+  flex-shrink: 0;
+}
+
+.success-content h4 {
+  margin: 0 0 0.25rem 0;
+  color: #22543d;
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.success-content p {
+  margin: 0;
+  color: #2f855a;
+  font-size: 0.875rem;
+}

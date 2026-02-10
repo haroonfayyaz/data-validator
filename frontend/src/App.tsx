@@ -1,7 +1,10 @@
 import { useState } from 'react'
 import FileUpload from './components/FileUpload'
 import LoadingIndicator from './components/LoadingIndicator'
+import SuccessBanner from './components/SuccessBanner'
+import ValidationResults from './components/ValidationResults'
 import { validateCsvFile, ValidationResponse } from './services/api'
+import { getErrorMessage } from './utils/errorHandler'
 import './App.css'
 
 function App() {
@@ -20,8 +23,8 @@ function App() {
     try {
       const result = await validateCsvFile(selectedFile)
       setValidationResult(result)
-    } catch (err: any) {
-      setError(err.response?.data?.detail || err.message || 'An error occurred while validating the file')
+    } catch (err) {
+      setError(getErrorMessage(err))
     } finally {
       setLoading(false)
     }
@@ -54,8 +57,19 @@ function App() {
 
         {error && (
           <div className="error-message">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="8" x2="12" y2="12" />
+              <line x1="12" y1="16" x2="12.01" y2="16" />
+            </svg>
             <p>{error}</p>
           </div>
+        )}
+
+        {validationResult && validationResult.status === 'pass' && <SuccessBanner />}
+
+        {validationResult && validationResult.status === 'fail' && (
+          <ValidationResults errors={validationResult.errors} />
         )}
       </main>
     </div>
